@@ -1,0 +1,48 @@
+http:
+  port: 3000
+admin:
+  port: 9876
+  host: localhost
+apiEndpoints:
+  products:
+    host: localhost
+    paths: ['/products', '/products/*']
+  purchases:
+    host: localhost
+    paths: ['/purchases', '/purchases/*']
+serviceEndpoints:
+  productsService:
+    url: 'http://localhost:3333'
+  purchasesService:
+    url: 'http://localhost:3334'
+policies:
+  - basic-auth
+  - cors
+  - expression
+  - key-auth
+  - log
+  - oauth2
+  - proxy
+  - rate-limit
+pipelines:
+  productsPipeline:
+    apiEndpoints:
+      - products
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: productsService
+              changeOrigin: true
+  purchasesPipeline:
+    apiEndpoints:
+      - purchases
+    policies:
+    # Uncomment `key-auth:` when instructed to in the Getting Started guide.
+    # - key-auth:
+      - proxy:
+          - action:
+              serviceEndpoint: purchasesService
+              changeOrigin: true
+
